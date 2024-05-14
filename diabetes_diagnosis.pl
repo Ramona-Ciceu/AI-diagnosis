@@ -1,9 +1,4 @@
-% Define patients
-Patient(Arrow).
-Patient(Jane).
-
-
-% Define symptoms
+% Define symptoms for diabetes.
 symptom(blurred_vision).
 symptom(excessive_thirst).
 symptom(feeling_very_tired).
@@ -14,63 +9,72 @@ symptom(increased_hunger).
 symptom(loss_of_muscle_bulk).
 symptom(frequent_urination).
 
-% Define risk factors
+% Define risk factors associated with diabetes.
 risk_factor(family_history).
 risk_factor(obesity).
 risk_factor(inactive_lifestyle).
-risk_factor(unhealty_diet).
-risk_factor(high_blood_presure).
-risk_factor(high_colesterol).
-risk_factors(had_gestional_diabetes_during_pregnacy).
-risk_factors(ethnicity).
-risk_factors(age).
+risk_factor(unhealthy_diet).
+risk_factor(high_blood_pressure).
+risk_factor(high_cholesterol).
+risk_factor(had_gestational_diabetes_during_pregnancy).
 
-% Rules for diabetes diagnosis
-diabetes_diagnosis(Type, Patient) :-
-    % Rule for type 1 diabetes
-    (   risk_factor(family_history),
-       risk_factors(age),
-        Type = type_1
-    ;   % Rule for type 2 diabetes
-        risk_factor(obesity),
-        risk_factor(inactive_lifestyle),
-        risk_factor(family_history),
-        risk_factors(had_gestional_diabetes_during_pregnacy),
-        risk_factor(unhealty_diet),
-        risk_factor(high_blood_presure),
-        risk_factor(high_colesterol),
-        Type = type_2
+% Rules for diabetes diagnosis.
+% This predicate performs the diagnosis of diabetes for a given patient.
+diabetes_diagnosis(Patient, Result) :-
+    % Rule for diabetes diagnosis.
+    (   (   symptom(blurred_vision),
+              symptom(excessive_thirst),
+              symptom(feeling_very_tired),
+              symptom(unexplained_weight_loss),
+              symptom(genital_itching_or_thrush),
+              symptom(cuts_and_wounds_take_longer_to_heal),
+              symptom(increased_hunger),
+              symptom(loss_of_muscle_bulk),
+              symptom(frequent_urination)
+        ;   risk_factor(obesity),
+            risk_factor(family_history),
+            risk_factor(inactive_lifestyle),
+            risk_factor(high_cholesterol),
+            risk_factor(had_gestational_diabetes_during_pregnancy),
+            risk_factor(unhealthy_diet),
+            risk_factor(high_blood_pressure)
+        ),
+        Result = positive,
+        !
+    ;   Result = negative
     ),
-    write('Patient '), write(Patient), write(' is likely to have '), write(Type), write(' diabetes.').
+    % Output the diagnosis result.
+    (Result = positive ->
+        write('Patient '), write(Patient), write(' is likely to have diabetes.')
+    ;   write('Patient '), write(Patient), write(' does not have diabetes.')
+    ).
 
-% Rules to check patient symptoms
-check_symptoms(Patient) :-
-       write ('Enter patient symptoms (comma-separated): '), read(Symptoms),
-        member(Symptom, Symptoms),
-        symptom(Symptom),
-        fail. 
+% Rules to check patient symptoms.
+% This predicate checks the symptoms of a patient.
+check_symptoms(_) :-
+    write('Enter patient symptoms (comma-separated): '), read(Symptoms),
+    member(Symptom, Symptoms),
+    symptom(Symptom),
+    fail. 
 check_symptoms(_).
 
-% Rules to check patient risk factors
-check_risk_factors(Patient) :-
-         write('Enter patient risk factors (comma-separated): '), read(RiskFactors) ,
-         member(RiskFactor, RiskFactors),
-         risk_factor(RiskFactor),
-         fail.
+% Rules to check patient risk factors.
+% This predicate checks the risk factors of a patient.
+check_risk_factors(_) :-
+    write('Enter patient risk factors (comma-separated): '), read(RiskFactors),
+    member(RiskFactor, RiskFactors),
+    risk_factor(RiskFactor),
+    fail.
 check_risk_factors(_).
 
-% Recommendations to reduce the risk of type 2 diabetes
-reduce_risk_healthy_lifestyle(Patient) :-
-    risk_factor(obesity),
-    risk_factor(inactive_lifestyle),
-    write('It is recommended that '), write(Patient), write(' reduce the risk of type 2 diabetes through healthy eating, regular exercise, and achieving a healthy body weight.').\
-
-% Main entry point
+% Main entry point.
+% This part of the code prompts the user to enter the patient's name and then proceeds to check the symptoms
+% and risk factors associated with the patient. After gathering the necessary information, it performs
+% a diabetes diagnosis for the patient using the 'diabetes_diagnosis/2' predicate. Finally, it prints the
+% diagnosis result indicating whether the patient is likely to have diabetes or not.
 main :-
     write('Enter patient name: '), read(Patient),
-    write('Enter patient symptoms: '), read(Symptoms),
-    write('Enter patient risk factors (comma-separated): '), read(RiskFactors),
-    append(Symptoms, RiskFactors, AllFactors),
-    % Check symptoms and risk factors against rules and produce diagnosis
-    diabetes_diagnosis(Type, AllFactors),
-    (   Type = type_2 -> reduce_risk_healthy_lifestyle(Patient) ; true).
+    check_symptoms(Patient),
+    check_risk_factors(Patient),
+    diabetes_diagnosis(Patient, Result),
+    write('Diabetes diagnosis for patient '), write(Patient), write(': '), write(Result), nl.
