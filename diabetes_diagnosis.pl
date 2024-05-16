@@ -42,11 +42,7 @@ diabetes_diagnosis(Patient, Result) :-
         Result = positive,
         !
     ;   Result = negative
-    ),
-    % Output the diagnosis result.
-    (Result = positive ->
-        write('Patient '), write(Patient), write(' is likely to have diabetes.')
-    ;   write('Patient '), write(Patient), write(' does not have diabetes.')
+
     ).
 
 % Rules to check patient symptoms.
@@ -72,14 +68,14 @@ check_risk_factors(_).
 % and risk factors associated with the patient. After gathering the necessary information, it performs
 % a diabetes diagnosis for the patient using the 'diabetes_diagnosis' predicate. Finally, it prints the
 % diagnosis result indicating whether the patient is likely to have diabetes or not.
-main :-
+diagnose :-
     write('Enter patient name: '), read(Patient),
     check_symptoms(Patient),
     check_risk_factors(Patient),
     diabetes_diagnosis(Patient, Result),
     write_diagnosis(Patient, Result).
     
- write_diagnosis(Patient, positive) :-
+write_diagnosis(Patient, positive) :-
     format('Patient ~w is likely to have diabetes.~n', [Patient]).
 write_diagnosis(Patient, negative) :-
     format('Patient ~w does not have diabetes.~n', [Patient]).
