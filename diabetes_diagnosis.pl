@@ -1,4 +1,4 @@
-% Define symptoms for diabetes.
+% Define symptoms associated with diabetes.
 symptom(blurred_vision).
 symptom(excessive_thirst).
 symptom(feeling_very_tired).
@@ -21,7 +21,7 @@ risk_factor(had_gestational_diabetes_during_pregnancy).
 % Rules for diabetes diagnosis.
 % This predicate performs the diagnosis of diabetes for a given patient.
 diabetes_diagnosis(Patient, Result) :-
-    % Rule for diabetes diagnosis.
+    % Rules for diabetes diagnosis.
     (   (   symptom(blurred_vision),
               symptom(excessive_thirst),
               symptom(feeling_very_tired),
