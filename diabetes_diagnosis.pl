@@ -63,7 +63,7 @@ check_risk_factors(_) :-
     fail.
 check_risk_factors(_).
 
-% Main entry point.
+% diagnose entry
 % This part of the code prompts the user to enter the patient's name and then proceeds to check the symptoms
 % and risk factors associated with the patient. After gathering the necessary information, it performs
 % a diabetes diagnosis for the patient using the 'diabetes_diagnosis' predicate. Finally, it prints the
